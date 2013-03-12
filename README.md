@@ -30,6 +30,11 @@ Or from another view function:
 Changelog
 =========
 
+1.0.1
+-----
+
+* Defer to the `requests` library for setting the Content-Length header
+
 1.0.0
 -----
 
