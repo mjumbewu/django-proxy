@@ -23,15 +23,16 @@ def proxy_view(request, url, requests_args=None):
     if 'params' not in requests_args:
         requests_args['params'] = QueryDict('', mutable=True)
 
-    # Explicitly set content-length request header, as some servers will
-    # want it and complain without it.
-    if not any([key.lower() == 'content-length' for key in headers]):
-        headers['CONTENT-LENGTH'] = str(len(requests_args['data']))
-
     # Overwrite any headers and params from the incoming request with explicitly
     # specified values for the requests library.
     headers.update(requests_args['headers'])
     params.update(requests_args['params'])
+
+    # If there's a content-length header from Django, it's probably in all-caps
+    # and requests might not notice it, so just remove it.
+    for key in headers.keys():
+        if key.lower() == 'content-length':
+            del headers[key]
 
     requests_args['headers'] = headers
     requests_args['params'] = params
