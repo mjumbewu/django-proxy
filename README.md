@@ -16,19 +16,31 @@ Includes a view function that can be used directly from a URL spec:
 
 	urlpatterns = patterns(
 		...
-	    url('proxy/(?P<url>.*)', proxy.views.proxy_view),
-	    ...
+		url('proxy/(?P<url>.*)', proxy.views.proxy_view),
+		...
 	)
 
 Or from another view function:
 
-	def myview(request):
-		remoteurl = '...'
-		response = proxy.views.proxy_view(request, remoteurl)
+	urlpatterns = patterns(
 		...
+		url('proxy/(?P<path>.*)', proxy.views.proxy_view),
+		...
+	)
+
+	def myview(request, path):
+		extra_requests_args = {...}
+		remoteurl = 'http://<host_name>/' + path
+		return proxy.views.proxy_view(request, remoteurl, extra_requests_args)
 
 Changelog
 =========
+
+1.0.2
+-----
+
+* Add `Content-length` to the set of headers not copies from the upstream
+  response.
 
 1.0.1
 -----
