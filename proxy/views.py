@@ -35,7 +35,7 @@ def proxy_view(request, url, requests_args=None):
             del headers[key]
 
     requests_args['headers'] = headers
-    requests_args['params'] = params
+    requests_args['params'] = dict(params)
 
     response = requests.request(request.method, url, **requests_args)
 
@@ -49,9 +49,9 @@ def proxy_view(request, url, requests_args=None):
         # Certain response headers should NOT be just tunneled through.  These
         # are they.  For more info, see:
         # http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.5.1
-        'connection', 'keep-alive', 'proxy-authenticate', 
-        'proxy-authorization', 'te', 'trailers', 'transfer-encoding', 
-        'upgrade', 
+        'connection', 'keep-alive', 'proxy-authenticate',
+        'proxy-authorization', 'te', 'trailers', 'transfer-encoding',
+        'upgrade',
 
         # Although content-encoding is not listed among the hop-by-hop headers,
         # it can cause trouble as well.  Just let the server set the value as
