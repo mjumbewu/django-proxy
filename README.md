@@ -5,6 +5,15 @@ Django HTTP Proxy
 
 **Author:** Mjumbe Wawatu Ukweli, [Follow me on Twitter][1].
 
+Installation
+============
+
+Install with
+
+```console
+$ pip install django-proxy
+```
+
 Overview
 ========
 
