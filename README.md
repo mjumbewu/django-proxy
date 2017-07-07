@@ -5,6 +5,15 @@ Django HTTP Proxy
 
 **Author:** Mjumbe Wawatu Ukweli, [Follow me on Twitter][1].
 
+Installation
+============
+
+Install with
+
+```console
+$ pip install django-proxy
+```
+
 Overview
 ========
 
@@ -14,24 +23,28 @@ response as possible.
 
 Includes a view function that can be used directly from a URL spec:
 
-	urlpatterns = patterns(
-		...
-		url('proxy/(?P<url>.*)', proxy.views.proxy_view),
-		...
-	)
+```python
+urlpatterns = patterns(
+	...
+	url('proxy/(?P<url>.*)', proxy.views.proxy_view),
+	...
+)
+```
 
 Or from another view function:
 
-	urlpatterns = patterns(
-		...
-		url('proxy/(?P<path>.*)', proxy.views.proxy_view),
-		...
-	)
-
-	def myview(request, path):
-		extra_requests_args = {...}
-		remoteurl = 'http://<host_name>/' + path
-		return proxy.views.proxy_view(request, remoteurl, extra_requests_args)
+```python
+def myview(request, path):
+	extra_requests_args = {...}
+	remoteurl = 'http://<host_name>/' + path
+	return proxy.views.proxy_view(request, remoteurl, extra_requests_args)
+	
+urlpatterns = patterns(
+	...
+	url('proxy/(?P<path>.*)', myview),
+	...
+)
+```
 
 Changelog
 =========
