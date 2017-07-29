@@ -1,5 +1,5 @@
 import requests
-from django.http import HttpResponse
+from django.http import StreamingHttpResponse
 from django.http import QueryDict
 
 
@@ -39,13 +39,13 @@ def proxy_view(request, url, requests_args=None):
 
     response = requests.request(request.method, url,
      stream=True, **requests_args)
-     
+
     def stream_content():
         for chunk in response.iter_content(chunk_size=1024):
             if chunk:
                 yield chunk
 
-    proxy_response = HttpResponse(
+    proxy_response = StreamingHttpResponse(
         stream_content(),
         status=response.status_code)
 
