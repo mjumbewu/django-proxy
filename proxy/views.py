@@ -18,6 +18,10 @@ def proxy_view(request, url, requests_args=None):
 
     if 'headers' not in requests_args:
         requests_args['headers'] = {}
+    else:
+        # Make header keys case insensitive
+        requests_args['headers'] = {k.lower():v for k,v in requests_args['headers'].items()}
+
     if 'data' not in requests_args:
         requests_args['data'] = request.body
     if 'params' not in requests_args:
@@ -49,9 +53,9 @@ def proxy_view(request, url, requests_args=None):
         # Certain response headers should NOT be just tunneled through.  These
         # are they.  For more info, see:
         # http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.5.1
-        'connection', 'keep-alive', 'proxy-authenticate', 
-        'proxy-authorization', 'te', 'trailers', 'transfer-encoding', 
-        'upgrade', 
+        'connection', 'keep-alive', 'proxy-authenticate',
+        'proxy-authorization', 'te', 'trailers', 'transfer-encoding',
+        'upgrade',
 
         # Although content-encoding is not listed among the hop-by-hop headers,
         # it can cause trouble as well.  Just let the server set the value as
@@ -83,5 +87,8 @@ def get_headers(environ):
             headers[key[5:].replace('_', '-')] = value
         elif key in ('CONTENT_TYPE', 'CONTENT_LENGTH'):
             headers[key.replace('_', '-')] = value
+
+        # Make header keys case insensitive
+        headers[key.lower()] = value
 
     return headers
