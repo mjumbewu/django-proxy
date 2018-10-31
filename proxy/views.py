@@ -84,11 +84,11 @@ def get_headers(environ):
     for key, value in environ.items():
         # Sometimes, things don't like when you send the requesting host through.
         if key.startswith('HTTP_') and key != 'HTTP_HOST':
-            headers[key[5:].replace('_', '-')] = value
+            headers[key[5:].lower().replace('_', '-')] = value
         elif key in ('CONTENT_TYPE', 'CONTENT_LENGTH'):
-            headers[key.replace('_', '-')] = value
-
-        # Make header keys case insensitive
-        headers[key.lower()] = value
+            headers[key.lower().replace('_', '-')] = value
+        else:
+            # Make header keys case insensitive
+            headers[key.lower()] = value
 
     return headers
