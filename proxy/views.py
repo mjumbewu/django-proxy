@@ -20,7 +20,7 @@ def proxy_view(request, url, requests_args=None):
         requests_args['headers'] = {}
     else:
         # Make header keys case insensitive
-        requests_args['headers'] = {k.lower():v for k,v in requests_args['headers'].items()}
+        requests_args['headers'] = {k.lower():v for k,v in requests_args['headers'].items() if type(v) in (str, bytes, unicode)}
 
     if 'data' not in requests_args:
         requests_args['data'] = request.body
@@ -82,13 +82,14 @@ def get_headers(environ):
     """
     headers = {}
     for key, value in environ.items():
-        # Sometimes, things don't like when you send the requesting host through.
-        if key.startswith('HTTP_') and key != 'HTTP_HOST':
-            headers[key[5:].lower().replace('_', '-')] = value
-        elif key in ('CONTENT_TYPE', 'CONTENT_LENGTH'):
-            headers[key.lower().replace('_', '-')] = value
-        else:
-            # Make header keys case insensitive
-            headers[key.lower()] = value
+        if type(value) in (str, bytes, unicode):
+            # Sometimes, things don't like when you send the requesting host through.
+            if key.startswith('HTTP_') and key != 'HTTP_HOST':
+                headers[key[5:].lower().replace('_', '-')] = value
+            elif key in ('CONTENT_TYPE', 'CONTENT_LENGTH'):
+                headers[key.lower().replace('_', '-')] = value
+            else:
+                # Make header keys case insensitive
+                headers[key.lower()] = value
 
     return headers
