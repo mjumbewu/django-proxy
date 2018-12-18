@@ -1,7 +1,7 @@
 import requests
 from django.http import HttpResponse
 from django.http import QueryDict
-
+from request.utils import check_header_validity
 
 def proxy_view(request, url, requests_args=None):
     """
@@ -82,7 +82,9 @@ def get_headers(environ):
     """
     headers = {}
     for key, value in environ.items():
-        if type(value) in (str, bytes, unicode):
+        try:
+            # Check that the key value pair are valid types for the headers
+            check_header_validity((key, value))
             # Sometimes, things don't like when you send the requesting host through.
             if key.startswith('HTTP_') and key != 'HTTP_HOST':
                 headers[key[5:].lower().replace('_', '-')] = value
@@ -91,5 +93,9 @@ def get_headers(environ):
             else:
                 # Make header keys case insensitive
                 headers[key.lower()] = value
+        except TypeError as e:
+            # catch type error thrown by check_header_validity method
+            # and skip that header as to avoid issues
+            pass
 
     return headers
