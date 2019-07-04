@@ -55,6 +55,10 @@ urlpatterns = patterns(
 Changelog
 =========
 
+1.2.0
+-----
+* Convert relative URLs in `Location` headers to absolute.
+
 1.0.2
 -----
 
