@@ -66,9 +66,39 @@ def proxy_view(request, url, requests_args=None):
     for key, value in response.headers.items():
         if key.lower() in excluded_headers:
             continue
-        proxy_response[key] = value
+        elif key.lower() == 'location':
+            # If the location is relative at all, we want it to be absolute to
+            # the upstream server.
+            proxy_response[key] = make_absolute_location(response, value)
+        else:
+            proxy_response[key] = value
 
     return proxy_response
+
+
+def make_absolute_location(response, location):
+    """
+    Convert a location header into an absolute URL.
+    """
+    absolute_pattern = re.compile(r'^[a-zA-Z]+://.*$')
+    if absolute_pattern.match(location):
+        return location
+
+    parsed_url = urlparse(response.url)
+
+    if location.startswith('//'):
+        # scheme relative
+        return parsed_url.scheme + ':' + location
+
+    elif location.startswith('/'):
+        # host relative
+        return parsed_url.scheme + '://' + parsed_url.netloc + location
+
+    else:
+        # path relative
+        return parsed_url.scheme + '://' + parsed_url.netloc + parsed_url.path.rsplit('/', 1)[0] + location
+
+    return location
 
 
 def get_headers(environ):
