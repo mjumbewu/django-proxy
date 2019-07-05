@@ -7,6 +7,12 @@ env:
   - DJANGO_VERSION=1.11
   - DJANGO_VERSION=2.2
 install:
-  - pip install -q Django==$DJANGO_VERSION --use-mirrors
-  - pip install -q -r requirements.txt --use-mirrors
+  - pip install -q Django==$DJANGO_VERSION
+  - pip install -q -r requirements.txt
 script: python manage.py test
+matrix:
+  exclude:
+  - python: 3.6
+    env: DJANGO_VERSION=1.8
+  - python: 2.7
+    env: DJANGO_VERSION=2.2
