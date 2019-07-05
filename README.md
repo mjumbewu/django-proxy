@@ -1,5 +1,6 @@
 Django HTTP Proxy
 =================
+[![Build Status](https://travis-ci.org/mjumbewu/django-proxy.svg?branch=master)](https://travis-ci.org/mjumbewu/django-proxy)
 
 **Simple HTTP proxy service as a Django app.**
 
