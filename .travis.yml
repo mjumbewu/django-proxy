@@ -12,7 +12,7 @@ install:
 script: python manage.py test
 matrix:
   exclude:
-  - python: 3.6
+  - python: "3.6"
     env: DJANGO_VERSION=1.8
-  - python: 2.7
+  - python: "2.7"
     env: DJANGO_VERSION=2.2
