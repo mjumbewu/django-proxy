@@ -44,7 +44,7 @@ def myview(request, path):
 	extra_requests_args = {...}
 	remoteurl = 'http://<host_name>/' + path
 	return proxy_view(request, remoteurl, extra_requests_args)
-	
+
 urlpatterns = patterns(
 	...
 	url('proxy/(?P<path>.*)', myview),
@@ -54,6 +54,10 @@ urlpatterns = patterns(
 
 Changelog
 =========
+
+1.2.0
+-----
+* Bug Fix: Missing imports
 
 1.2.0
 -----
