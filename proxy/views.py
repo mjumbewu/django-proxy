@@ -23,7 +23,7 @@ def querydict_to_dict(querydict):
     return data
 
 
-def proxy_view(request, url, requests_args=None, auth=None):
+def proxy_view(request, url, requests_args=None):
     """
     Forward as close to an exact copy of the request as possible along to the
     given url.  Respond with as close to an exact copy of the resulting
