@@ -8,18 +8,33 @@ except:
     from urllib.parse import urlparse
 
 
-def proxy_view(request, url, requests_args=None):
+def querydict_to_dict(querydict):
+    """
+    Converts a QueryDict object to a dictionary.
+    Unlike Django's QueryDict.dict() function, this keeps lists that
+    have two or more items as lists.
+    """
+    data = {}
+    for key in querydict.keys():
+        v = querydict.getlist(key)
+        if len(v) == 1:
+            v = v[0]
+        data[key] = v
+    return data
+
+
+def proxy_view(request, url, requests_args=None, auth=None):
     """
     Forward as close to an exact copy of the request as possible along to the
     given url.  Respond with as close to an exact copy of the resulting
     response as possible.
-
     If there are any additional arguments you wish to send to requests, put
     them in the requests_args dictionary.
     """
     requests_args = (requests_args or {}).copy()
     headers = get_headers(request.META)
-    params = request.GET.copy()
+    params = QueryDict('', mutable=True)
+    params.update(querydict_to_dict(request.GET))
 
     if 'headers' not in requests_args:
         requests_args['headers'] = {}
