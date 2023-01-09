@@ -28,4 +28,4 @@ jobs:
         run: pip install tox
       - name: Run tox
         # Run tox using the version of Python in `PATH`
-        run: tox -e django-${{ matrix.django }}
+        run: tox -e django${{ matrix.django }}
