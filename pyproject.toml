@@ -1,0 +1,33 @@
+[tool.tox]
+legacy_tox_ini = """
+    [tox]
+    env_list =
+        django-3.2
+        django-4.0
+        django-4.1
+    minversion = 4.2.6
+
+    [testenv]
+    description = run the tests with pytest
+    package = wheel
+    wheel_build_env = .pkg
+    deps =
+        -r requirements.txt
+    commands =
+        python manage.py test
+    
+    [testenv:django-3.2]
+    # basepython = python3.9
+    deps = {[testenv]deps}
+        Django>=3.2,<4.0
+    
+    [testenv:django-4.0]
+    # basepython = python3.9
+    deps = {[testenv]deps}
+        Django>=4.0,<4.1
+    
+    [testenv:django-4.1]
+    # basepython = python3.9
+    deps = {[testenv]deps}
+        Django>=4.1,<4.2
+"""

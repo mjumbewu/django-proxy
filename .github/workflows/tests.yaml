@@ -1,0 +1,31 @@
+name: Run tox tests
+
+on:
+  - push
+  - pull-request
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.10", "3.11"]
+        django: ["3.2", "4.0", "4.1"]
+        exclude:
+          - python: "3.11"
+            django: "3.2"
+          - python: "3.11"
+            django: "4.0"
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install tox
+        run: pip install tox
+      - name: Run tox
+        # Run tox using the version of Python in `PATH`
+        run: tox -e django-${{ matrix.django }}
