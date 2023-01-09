@@ -1,8 +1,8 @@
-name: Run tox tests
+name: Tests
 
 on:
   - push
-  - pull-request
+  - pull_request
 
 jobs:
   build:
