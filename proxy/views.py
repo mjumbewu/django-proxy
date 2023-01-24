@@ -1,6 +1,6 @@
 import re
 import requests
-from django.http import HttpResponse
+from django.http import StreamingHttpResponse
 from django.http import QueryDict
 try:
     from urlparse import urlparse
@@ -42,10 +42,16 @@ def proxy_view(request, url, requests_args=None):
     requests_args['headers'] = headers
     requests_args['params'] = params
 
-    response = requests.request(request.method, url, **requests_args)
+    response = requests.request(request.method, url,
+     stream=True, **requests_args)
 
-    proxy_response = HttpResponse(
-        response.content,
+    def stream_content():
+        for chunk in response.iter_content(chunk_size=1024):
+            if chunk:
+                yield chunk
+
+    proxy_response = StreamingHttpResponse(
+        stream_content(),
         status=response.status_code)
 
     excluded_headers = set([
